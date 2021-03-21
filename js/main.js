@@ -32,7 +32,7 @@ $(document).ready(function () {
 
     if(randomNum>0.9){ //Show random animals from Unsplash
       count++;
-      console.log("Count : " + count);
+      //console.log("Count : " + count);
 
       //SHOW IMAGE
       if(fetchedImgUrls !=null){
