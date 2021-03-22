@@ -5,68 +5,47 @@ $(document).ready(function () {
   }
   var actualLocalImgs = [...initialLocalImgs];
 
-  var count=0;
-
   //UNSPLASH VARIABLES
-  var fetchedImgUrls = new Array();
-  var usedIndexes = new Array();
+  var animals = {
+    cat : {
+      fetchedImgUrls : new Array(),
+      usedIndexes : new Array(),
+      pageNb : 0,
+      maxPageNb : 0,
+      query:"cute_kitten,kitten,kitty,cute_cat,cat",
+      count : 0
+    },
+    puppy : {
+      fetchedImgUrls : new Array(),
+      usedIndexes : new Array(),
+      pageNb : 0,
+      maxPageNb : 0,
+      query:"cute_puppy,puppy",
+      count : 0
+    }
+  };
+
 
   var clientID = "cyxYb2zXiPAFLRNND9tJoznITwUpuexTVlw1Wb_b9mg";
   var numberOfImages = 30;
-  var pageNb;
-  var maxPageNb;
-  var query = "cute_kitten,kitten,kitty,cute_cat,cat";
+  //TEST FETCH to get maxPageNb and random PageNb for initial fetch, for each animal
+  initialFetch('cat');
+  initialFetch('puppy');
 
-  //TEST FETCH to get maxPageNb and random PageNb for initial fetch
-  fetch("https://api.unsplash.com/search/photos/?per_page="+numberOfImages+"&client_id="+clientID+"&query="+query)
-    .then(function(data){
-      return data.json(); //Get maxPageNumber
-    }).then(function(data){
-      maxPageNb = data.total_pages;
-      pageNb = Math.floor(Math.random() * maxPageNb);
-  });
 
-  //INITIAL FETCH
-  fetchData("https://api.unsplash.com/search/photos/?page="+pageNb+"&per_page="+numberOfImages+"&client_id="+clientID+"&query="+query);
+
 
   $("#main-content").click(function(){
     $("#title").css("opacity",0);
 
     var randomNum = Math.random();
 
-    if(randomNum>0.2){ //Show random animals from Unsplash 80% of the time
-      count++;
-      //console.log("Count : " + count);
+    if(randomNum>0.2 && randomNum<0.7){ //Show random cats from Unsplash 50% of the time
+      updateOnClick('cat');
+    }else if(randomNum>0.7 && randomNum<=1){
+      console.log("show puppy");
+      updateOnClick('puppy');
 
-      //SHOW IMAGE
-      if(fetchedImgUrls !=null){
-        var randomIndex = Math.floor(Math.random() * fetchedImgUrls.length);
-        while(usedIndexes.includes(randomIndex) == true){//If already showed picture on this page
-          randomIndex = Math.floor(Math.random() * fetchedImgUrls.length);
-        }
-        usedIndexes.push(randomIndex);
-        //console.log("Used indexes : " + usedIndexes);
-
-        $("#main-content").append('<img class="img" src="'+fetchedImgUrls[randomIndex]+'">');
-
-        if($(".img").length >1){//If there is already an image on the page, delete it
-          $(".img")[0].remove();
-        }
-      }else{console.log("Cannot connect to the API.")}
-
-
-      //If on next click you will have to request
-      if(count == numberOfImages){
-
-        pageNb = Math.floor(Math.random() * maxPageNb);//Random page between the all pages of cats
-        count = 0; //Reset counter
-        usedIndexes = new Array(); //Reset usedIndexes
-
-        var url = "https://api.unsplash.com/search/photos/?page="+pageNb+"&per_page="+numberOfImages+"&client_id="+clientID+"&query="+query;
-
-        //Make a request to the API
-        fetchData(url);
-      }
     }else{ //Show our cats
       if(actualLocalImgs.length ==0){
         actualLocalImgs = [...initialLocalImgs]; //Reset to initial values when all images seen
@@ -85,21 +64,70 @@ $(document).ready(function () {
 
 
 
+
   });
 
-  function fetchData(url){
+  function fetchData(url,animalName){
     fetch(url)
       .then(function(data){
         return data.json();
       }).then(function(data){
           //console.log(data);
-          fetchedImgUrls = new Array();
+          animals[animalName].fetchedImgUrls = new Array();;
           for(i=0;i<data.results.length;i++){
-            fetchedImgUrls.push(data.results[i].urls.regular)
+            animals[animalName].fetchedImgUrls.push(data.results[i].urls.regular)
           }
-          //console.log(fetchedImgUrls);
+          return animals[animalName].fetchedImgUrls;
+          //console.log(animals[animalName].fetchedImgUrls);
           //console.log("Response");
     });
+  }
+
+  function initialFetch(animalName){
+    fetch("https://api.unsplash.com/search/photos/?per_page="+numberOfImages+"&client_id="+clientID+"&query="+animals[animalName].query) //Get th
+      .then(function(data){
+        return data.json(); //Get maxPageNumber
+      }).then(function(data){
+        animals[animalName].maxPageNb = data.total_pages;
+        animals[animalName].pageNb = Math.floor(Math.random() * animals[animalName].maxPageNb);
+    }).then(function(){
+      //INITIAL FETCH
+      fetchData("https://api.unsplash.com/search/photos/?page="+animals[animalName].pageNb+"&per_page="+numberOfImages+"&client_id="+clientID+"&query="+animals[animalName].query,animalName);
+    });
+  }
+
+  function updateOnClick(animalName){
+    animals[animalName].count++;
+    //console.log(animalName +" count : " +   animals[animalName].count);
+    //SHOW IMAGE
+    if(animals[animalName].fetchedImgUrls !=null){
+      var randomIndex = Math.floor(Math.random() * animals[animalName].fetchedImgUrls.length);
+      while(animals[animalName].usedIndexes.includes(randomIndex) == true){//If already showed picture on this page
+        randomIndex = Math.floor(Math.random() * animals[animalName].fetchedImgUrls.length);
+      }
+      animals[animalName].usedIndexes.push(randomIndex);
+      //console.log("Used indexes : " + animals[animalName].usedIndexes);
+
+      $("#main-content").append('<img class="img" src="'+animals[animalName].fetchedImgUrls[randomIndex]+'">');
+
+      if($(".img").length >1){//If there is already an image on the page, delete it
+        $(".img")[0].remove();
+      }
+    }else{console.log("Cannot connect to the API.")}
+
+
+    //If on next click you will have to request
+    if(animals[animalName].count == numberOfImages){
+
+      animals[animalName].pageNb = Math.floor(Math.random() * animals[animalName].maxPageNb);//Random page between the all pages of cats
+      animals[animalName].count = 0; //Reset counter
+      animals[animalName].usedIndexes = new Array(); //Reset usedIndexes
+
+      var url = "https://api.unsplash.com/search/photos/?page="+280+"&per_page="+numberOfImages+"&client_id="+clientID+"&query="+animals[animalName].query;
+
+      //Make a request to the API
+      fetchData(url,animalName);
+    }
   }
 
 });
