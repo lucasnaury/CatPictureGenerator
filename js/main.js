@@ -5,6 +5,7 @@ $(document).ready(function () {
   }
   var actualLocalImgs = [...initialLocalImgs];
 
+
   //UNSPLASH VARIABLES
   var animals = {
     cat : {
@@ -20,7 +21,7 @@ $(document).ready(function () {
       usedIndexes : new Array(),
       pageNb : 0,
       maxPageNb : 0,
-      query:"cute_puppy,puppy",
+      query:"cute_puppy,puppy,pup,puppy_dog,baby_dog,young_dog,cute_baby_dog",
       count : 0
     }
   };
@@ -43,7 +44,6 @@ $(document).ready(function () {
     if(randomNum>0.2 && randomNum<0.7){ //Show random cats from Unsplash 50% of the time
       updateOnClick('cat');
     }else if(randomNum>0.7 && randomNum<=1){
-      console.log("show puppy");
       updateOnClick('puppy');
 
     }else{ //Show our cats
@@ -60,10 +60,6 @@ $(document).ready(function () {
         $(".img")[0].remove();
       }
     }
-
-
-
-
 
   });
 
@@ -88,7 +84,11 @@ $(document).ready(function () {
       .then(function(data){
         return data.json(); //Get maxPageNumber
       }).then(function(data){
-        animals[animalName].maxPageNb = data.total_pages;
+        if(animalName == "puppy"){
+          animals[animalName].maxPageNb = data.total_pages / 8; //Only take the first 1/8 pages to make sure they match the keywords well
+        }else{
+          animals[animalName].maxPageNb = data.total_pages / 2; //Only take the first half pages to make sure they match the keywords well
+        }
         animals[animalName].pageNb = Math.floor(Math.random() * animals[animalName].maxPageNb);
     }).then(function(){
       //INITIAL FETCH
@@ -120,10 +120,11 @@ $(document).ready(function () {
     if(animals[animalName].count == numberOfImages){
 
       animals[animalName].pageNb = Math.floor(Math.random() * animals[animalName].maxPageNb);//Random page between the all pages of cats
+      if(animalName =="puppy") console.log("Page : " + animals[animalName].pageNb);
       animals[animalName].count = 0; //Reset counter
       animals[animalName].usedIndexes = new Array(); //Reset usedIndexes
 
-      var url = "https://api.unsplash.com/search/photos/?page="+280+"&per_page="+numberOfImages+"&client_id="+clientID+"&query="+animals[animalName].query;
+      var url = "https://api.unsplash.com/search/photos/?page="+animals[animalName].pageNb+"&per_page="+numberOfImages+"&client_id="+clientID+"&query="+animals[animalName].query;
 
       //Make a request to the API
       fetchData(url,animalName);
