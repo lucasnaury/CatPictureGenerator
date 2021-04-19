@@ -1,6 +1,6 @@
 $(document).ready(function () {
   var initialLocalImgs = new Array();
-  for(i=1;i<=50;i++){ //50 = total number of images
+  for(i=1;i<=52;i++){ //52 = total number of images
     initialLocalImgs.push("img/Pictures/"+i+".jpg");
   }
   var actualLocalImgs = [...initialLocalImgs];
