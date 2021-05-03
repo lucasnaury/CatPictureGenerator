@@ -1,0 +1,79 @@
+body{
+  padding: 0;
+  margin: 0;
+  font-family: Montserrat,sans-serif;
+  background: #1b1b1f;
+}
+*{
+  //Disable Select
+  user-select: none; /* supported by Chrome and Opera */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+
+  //Disable highlight
+  -webkit-tap-highlight-color: transparent;
+  outline: none !important;
+}
+
+#main-content{
+  z-index: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  max-height:100%;
+  transition: background 300ms ease-in-out;
+  cursor: pointer;
+  //background-image: url(https://source.unsplash.com/collection/12276674);
+  //background-image : url("http://thecatapi.com/api/images/get?format=src&type=gif");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+
+  .img{
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+    overflow-y: hidden;
+
+    //object-fit: contain;
+  }
+
+
+
+
+  #title{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 65px;
+    text-align: center;
+    margin: 0;
+    font-weight: 700;
+    color: white;
+    transition: color 300ms ease-in-out;
+
+  }
+  //CONCOURS STYLE
+  #title{
+    width: 100%;
+    font-size: 3em;
+
+    span{
+      width: 80%;
+      font-size: .5em;
+      position: absolute;
+      top: 150%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      margin: 0;
+      color: white;
+    }
+  }
+
+}

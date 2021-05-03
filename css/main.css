@@ -54,3 +54,20 @@ body {
   color: white;
   transition: color 300ms ease-in-out;
 }
+
+#main-content #title {
+  width: 100%;
+  font-size: 3em;
+}
+
+#main-content #title span {
+  width: 80%;
+  font-size: .5em;
+  position: absolute;
+  top: 150%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  margin: 0;
+  color: white;
+}
