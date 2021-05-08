@@ -69,10 +69,10 @@ $(document).ready(function () {
         return data.json();
       }).then(function(data){
           //console.log(data);
-          animals[animalName].fetchedImgUrls = new Array();;
-          for(i=0;i<data.results.length;i++){
-            animals[animalName].fetchedImgUrls.push(data.results[i].urls.regular)
-          }
+          animals[animalName].fetchedImgUrls = data.results.map((result)=>{
+            return result.urls.regular;
+          });
+
           return animals[animalName].fetchedImgUrls;
           //console.log(animals[animalName].fetchedImgUrls);
           //console.log("Response");
