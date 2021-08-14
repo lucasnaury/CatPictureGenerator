@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: List images in img directory
 
 # Controls when the workflow will run
 on:
@@ -32,4 +32,4 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Automatically generate list of images in img directory
-        run: ls | egrep '\.jpg$|\.png$' > filenames.txt
+        run: ls | egrep '\.jpg$|\.jpeg$|\.png$' > filenames.txt
