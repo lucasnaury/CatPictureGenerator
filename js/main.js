@@ -1,12 +1,14 @@
 $(document).ready(function () {
+  //VARIABLES
   var initialLocalImgs = new Array();
-  for(i=1;i<=52;i++){ //52 = total number of images
+  for(i=1;i<=61;i++){ //61 = total number of images
     initialLocalImgs.push("img/Pictures/"+i+".jpg");
   }
   var actualLocalImgs = [...initialLocalImgs];
 
-
   //UNSPLASH VARIABLES
+  var clientID = "cyxYb2zXiPAFLRNND9tJoznITwUpuexTVlw1Wb_b9mg";
+  var numberOfImages = 30;
   var animals = {
     cat : {
       fetchedImgUrls : new Array(),
@@ -27,11 +29,43 @@ $(document).ready(function () {
   };
 
 
-  var clientID = "cyxYb2zXiPAFLRNND9tJoznITwUpuexTVlw1Wb_b9mg";
-  var numberOfImages = 30;
-  //TEST FETCH to get maxPageNb and random PageNb for initial fetch, for each animal
-  initialFetch('cat');
-  initialFetch('puppy');
+
+
+  //HOME SCREEN
+  var selectedAnimalTypes = []
+  var range = [];
+  //Type select
+  $('#cat').click(  ()=>selectType(   ["cat"],     [0.2, 1.1, 1]))//CATS : Cats between 0.2 and 1 and no puppies
+  $('#puppy').click(()=>selectType(  ["puppy"],    [0.3, 0, 1]))  //PUPPIES : Puppies between 0 and 1 and no cats
+  $('#both').click( ()=>selectType(["cat","puppy"],[0.2, 0.7, 1]))//BOTH : Cats between 0.2 and 0.7 and puppies between 0.7 and 0.1
+
+  function selectType(array,r){
+    //Set variable
+    selectedAnimalTypes = array
+    range = r
+    console.log(r)
+    //Show right menus
+    $('#select').removeClass('visible')
+    $('#main-content').addClass('visible')
+    console.log(selectedAnimalTypes)
+
+
+    //TEST FETCH to get maxPageNb and random PageNb for initial fetch, for each animal
+    for(i=0; i<selectedAnimalTypes.length; i++){
+      animal = selectedAnimalTypes[i]
+      initialFetch(animal)
+    }
+    //initialFetch('cat');
+    //initialFetch('puppy');
+  }
+
+
+
+
+
+
+
+
 
 
 
@@ -41,12 +75,14 @@ $(document).ready(function () {
 
     var randomNum = Math.random();
 
-    if(randomNum>0.2 && randomNum<0.7){ //Show random cats from Unsplash 50% of the time
+    if(randomNum>=range[0] && randomNum<range[1]){ //Show random cats from Unsplash
+      console.log('show cat')
       updateOnClick('cat');
-    }else if(randomNum>0.7 && randomNum<=1){
-      updateOnClick('puppy');
-
+    }else if(randomNum>=range[1] && randomNum<=1){//Show random puppies from Unsplash
+      console.log('show puppy')
+      updateOnClick('puppy')
     }else{ //Show our cats
+      console.log('show my imgs')
       if(actualLocalImgs.length ==0){
         actualLocalImgs = [...initialLocalImgs]; //Reset to initial values when all images seen
       }
